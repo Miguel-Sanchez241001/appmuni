@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-// Definir color como constante
-const Color COLOR_BAKCGROUND_LOGON = Color(0xE0DCDCFF);
-
-// Puedes definir más colores según los necesites
-const Color kColorPrimary = Color(0xFF007BFF);
-const Color kColorSecondary = Color(0xFFFFA500);
-const Color kColorAccent = Color(0xFFFF5722);
+// Definición de los colores usados en la aplicación
+class AppColors {
+  static const Color primaryRed = Color(0xFFe53935);
+  static const Color white = Colors.white;
+  static const Color white70 = Colors.white70;
+  static const Color grey300 = Color(0xFFE0E0E0);
+  static const Color grey500 = Color(0xFF9E9E9E);
+}
