@@ -7,7 +7,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> login(String username, String password) async {
     // Simula un proceso de autenticación
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
 
     if (username == "admin" && password == "1234") {
       _isLoggedIn = true;

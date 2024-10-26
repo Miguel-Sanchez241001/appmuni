@@ -5,6 +5,8 @@ import '../../../mantenimientos/presentation/pages/mantenimiento_page.dart';
 import '../viewmodels/login_viewmodel.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -14,19 +16,19 @@ class _HomePageState extends State<HomePage> {
 
   // Lista de ítems del BottomNavigationBar
   final List<BottomNavigationBarItem> bottomNavItems = [
-    BottomNavigationBarItem(
+    const BottomNavigationBarItem(
       icon: Icon(Icons.home), // Ícono para la pantalla inicial
       label: 'Inicio',
     ),
-    BottomNavigationBarItem(
+    const BottomNavigationBarItem(
       icon: Icon(Icons.article), // Ícono para Mantenimiento
       label: 'Mantenimiento',
     ),
-    BottomNavigationBarItem(
+    const BottomNavigationBarItem(
       icon: Icon(Icons.receipt), // Ícono para Reportes
       label: 'Reportes',
     ),
-    BottomNavigationBarItem(
+    const BottomNavigationBarItem(
       icon: Icon(Icons.computer), // Ícono para Equipos
       label: 'Equipos',
     ),
@@ -41,13 +43,13 @@ class _HomePageState extends State<HomePage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Image.asset('assets/images/logo.png', height: 150), // Imagen del logo
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
       ],
     ),
     // Páginas para las otras secciones
     Center(child: MantenimientoPage() ),
-    Center(child: Text('Reportes', style: TextStyle(fontSize: 24))),
-    Center(child: Text('Equipos', style: TextStyle(fontSize: 24))),
+    const Center(child: Text('Reportes', style: TextStyle(fontSize: 24))),
+    const Center(child: Text('Equipos', style: TextStyle(fontSize: 24))),
   ];
 
   // Método para cambiar de página
@@ -60,8 +62,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final loginViewModel = Provider.of<LoginViewModel>(context);
-    final user = loginViewModel.loggedInUser;
-    return Scaffold(
+     return Scaffold(
       backgroundColor: Colors.red,
       appBar: AppBar(
         backgroundColor: Colors.red,
@@ -70,18 +71,18 @@ class _HomePageState extends State<HomePage> {
           children: [
             Row(
               children: [
-                Icon(Icons.account_circle, size: 30, color: Colors.white),
+                const Icon(Icons.account_circle, size: 30, color: Colors.white),
                 // Ícono de usuario
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 // Espaciado entre ícono y texto
                 Text(
                   loginViewModel.email,
-                  style: TextStyle(fontSize: 16, color: Colors.white),
+                  style: const TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ],
             ),
             IconButton(
-              icon: Icon(Icons.exit_to_app, color: Colors.white, size: 30),
+              icon: const Icon(Icons.exit_to_app, color: Colors.white, size: 30),
               // Ícono de logout
               onPressed: () {
                 loginViewModel.logout();

@@ -55,7 +55,7 @@ class LoginViewModel extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    await Future.delayed(Duration(seconds: 2)); // Simulamos un delay
+    await Future.delayed(const Duration(seconds: 2)); // Simulamos un delay
 
     final user = _users.firstWhere(
           (user) => user.email == _email && _password == "1234",
