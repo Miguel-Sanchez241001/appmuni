@@ -34,6 +34,15 @@ class FormularioViewModel extends ChangeNotifier {
   // Método para enviar la solicitud
   void enviarSolicitud() {
     // Aquí podrías agregar la lógica para enviar la solicitud a un servidor
-    print("Solicitud enviada:\nNombre: $_nombre\nDepartamento: $_departamento\nDescripción: $_descripcionProblema\nPrioridad: $_prioridad");
+    print(
+        "Solicitud enviada:\nNombre: $_nombre\nDepartamento: $_departamento\nDescripción: $_descripcionProblema\nPrioridad: $_prioridad");
+  }
+
+  void limpiarFormulario() {
+    _nombre = '';
+    _departamento = '';
+    _descripcionProblema = '';
+    _prioridad = 'Media'; // Restablecemos a prioridad por defecto
+    notifyListeners(); // Notificamos a los listeners para actualizar la UI
   }
 }

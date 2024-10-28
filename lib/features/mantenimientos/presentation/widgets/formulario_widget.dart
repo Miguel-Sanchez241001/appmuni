@@ -1,7 +1,7 @@
 import 'package:appmuni/features/mantenimientos/presentation/viewmodels/formulario_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
- 
+
 class FormularioPage extends StatelessWidget {
   final String opcion;
 
@@ -9,12 +9,20 @@ class FormularioPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = Provider.of<FormularioViewModel>(context);
+    final nombreController = TextEditingController(text: viewModel.nombre);
+    final departamentoController =
+        TextEditingController(text: viewModel.departamento);
+    final descripcionController =
+        TextEditingController(text: viewModel.descripcionProblema);
+
     return Center(
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Material(  // Envolvemos el formulario en un Material
-             child: Container(
+          child: Material(
+            color: Colors.transparent,
+            child: Container(
               padding: const EdgeInsets.all(20.0),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -39,40 +47,46 @@ class FormularioPage extends StatelessWidget {
                       color: Colors.red,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   _buildTextField(
                     context,
                     label: 'Nombre del Solicitante',
-                    onChanged: (value) => context.read<FormularioViewModel>().setNombre(value),
+                    controller: nombreController,
+                    onChanged: (value) => viewModel.setNombre(value),
                   ),
                   _buildTextField(
                     context,
                     label: 'Departamento',
-                    onChanged: (value) => context.read<FormularioViewModel>().setDepartamento(value),
+                    controller: departamentoController,
+                    onChanged: (value) => viewModel.setDepartamento(value),
                   ),
                   _buildTextField(
                     context,
                     label: 'Descripción del Problema',
                     maxLines: 3,
-                    onChanged: (value) => context.read<FormularioViewModel>().setDescripcionProblema(value),
+                    controller: descripcionController,
+                    onChanged: (value) =>
+                        viewModel.setDescripcionProblema(value),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   _buildDropdown(
                     context,
                     label: 'Prioridad',
                     items: ['Alta', 'Media', 'Baja'],
-                    onChanged: (value) => context.read<FormularioViewModel>().setPrioridad(value!),
+                    value: viewModel.prioridad,
+                    onChanged: (value) => viewModel.setPrioridad(value!),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   Center(
                     child: ElevatedButton(
                       onPressed: () {
-                        context.read<FormularioViewModel>().enviarSolicitud();
-                        Navigator.pop(context); // Cerrar la pantalla después de enviar
+                        _confirmarEnvio(context, viewModel, nombreController,
+                            departamentoController, descripcionController);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
-                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 40, vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -95,11 +109,15 @@ class FormularioPage extends StatelessWidget {
     );
   }
 
-  // Widget para construir los campos de texto
-  Widget _buildTextField(BuildContext context, {required String label, int maxLines = 1, required Function(String) onChanged}) {
+  Widget _buildTextField(BuildContext context,
+      {required String label,
+      required TextEditingController controller,
+      int maxLines = 1,
+      required Function(String) onChanged}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: TextField(
+        controller: controller,
         maxLines: maxLines,
         decoration: InputDecoration(
           labelText: label,
@@ -113,8 +131,11 @@ class FormularioPage extends StatelessWidget {
     );
   }
 
-  // Widget para construir un DropdownButton (Selector de Prioridad)
-  Widget _buildDropdown(BuildContext context, {required String label, required List<String> items, required ValueChanged<String?> onChanged}) {
+  Widget _buildDropdown(BuildContext context,
+      {required String label,
+      required List<String> items,
+      required String value,
+      required ValueChanged<String?> onChanged}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -127,9 +148,9 @@ class FormularioPage extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
           child: DropdownButton<String>(
-            value: context.watch<FormularioViewModel>().prioridad,
+            value: value,
             isExpanded: true,
-            underline: Container(), // Elimina la línea de subrayado
+            underline: Container(),
             items: items
                 .map((item) => DropdownMenuItem(
                       value: item,
@@ -140,6 +161,68 @@ class FormularioPage extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  void _confirmarEnvio(
+    BuildContext context,
+    FormularioViewModel viewModel,
+    TextEditingController nombreController,
+    TextEditingController departamentoController,
+    TextEditingController descripcionController,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white, // Fondo blanco para el diálogo
+          title: const Text(
+            'Confirmar envío',
+            style: TextStyle(color: Colors.red), // Título en color rojo
+          ),
+          content: const Text(
+            '¿Está seguro de que desea enviar esta solicitud?',
+            style: TextStyle(color: Colors.black), // Texto en color negro
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancelar'),
+              style: TextButton.styleFrom(
+                foregroundColor:
+                    Colors.red, // Texto rojo en el botón "Cancelar"
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                viewModel.enviarSolicitud();
+                viewModel.limpiarFormulario();
+
+                // Limpiar controladores para que reflejen el estado del ViewModel
+                nombreController.clear();
+                departamentoController.clear();
+                descripcionController.clear();
+
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Solicitud enviada correctamente'),
+                    backgroundColor: Colors.red, // Fondo rojo para el SnackBar
+                  ),
+                );
+              },
+              child: const Text('Aceptar'),
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.red, // Fondo rojo
+                foregroundColor:
+                    Colors.white, // Texto blanco en el botón "Aceptar"
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

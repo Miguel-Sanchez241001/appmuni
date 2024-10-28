@@ -1,3 +1,4 @@
+import 'package:appmuni/features/mantenimientos/presentation/viewmodels/busquedasolicitudes_viewmodel.dart';
 import 'package:appmuni/features/mantenimientos/presentation/viewmodels/formulario_viewmodel.dart';
 import 'package:appmuni/features/usuarios/presentation/viewmodels/register_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => BusquedaMantenimientoViewModel()),
         ChangeNotifierProvider(create: (_) => LoginViewModel()),
         ChangeNotifierProvider(create: (_) => RegisterViewModel()),
         ChangeNotifierProvider(create: (_) => FormularioViewModel()),
@@ -32,7 +34,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const AuthWrapper(),
-        '/home': (context) =>const HomePage(),
+        '/home': (context) => const HomePage(),
         '/login': (context) => const LoginPage(),
       },
     );
@@ -47,7 +49,8 @@ class AuthWrapper extends StatelessWidget {
     final loginViewModel = Provider.of<LoginViewModel>(context);
 
     if (loginViewModel.isLoading) {
-      return const Center(child: CircularProgressIndicator()); // Indicador de carga
+      return const Center(
+          child: CircularProgressIndicator()); // Indicador de carga
     } else if (loginViewModel.loggedInUser != null) {
       // Usuario autenticado, redirigir a HomePage
       return const HomePage();
