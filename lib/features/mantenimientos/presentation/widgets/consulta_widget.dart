@@ -5,6 +5,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:provider/provider.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:share_plus/share_plus.dart';
 
 class BusquedaMantenimientoWidget extends StatefulWidget {
   const BusquedaMantenimientoWidget({super.key});
@@ -158,7 +160,14 @@ class _BusquedaMantenimientoWidgetState
         itemCount: viewModel.resultadosBusqueda.length,
         itemBuilder: (context, index) {
           final solicitud = viewModel.resultadosBusqueda[index];
-          return _buildSolicitudCard(context, solicitud);
+          return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 8.0),
+            decoration: BoxDecoration(
+              color: Colors.white, // Fondo blanco
+              borderRadius: BorderRadius.circular(16), // Bordes redondeados
+            ),
+            child: _buildSolicitudCard(context, solicitud),
+          );
         },
       ),
     );
@@ -173,6 +182,10 @@ class _BusquedaMantenimientoWidgetState
       ),
       child: Container(
         width: 200,
+        decoration: BoxDecoration(
+          color: Colors.white, // Fondo blanco
+          borderRadius: BorderRadius.circular(16), // Bordes redondeados
+        ),
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,7 +204,11 @@ class _BusquedaMantenimientoWidgetState
                 _verDetalles(context, solicitud);
               },
               icon: const Icon(Icons.visibility, color: Colors.white),
-              label: const Text('Ver'),
+              label: const Text(
+                'Ver',
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.white),
+              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
               ),
@@ -202,7 +219,11 @@ class _BusquedaMantenimientoWidgetState
                 await _descargarPDF(context, solicitud);
               },
               icon: const Icon(Icons.download, color: Colors.white),
-              label: const Text('Descargar'),
+              label: const Text(
+                'Descargar',
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.white),
+              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
               ),
@@ -218,31 +239,55 @@ class _BusquedaMantenimientoWidgetState
     return showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text(
-            'Detalles de la Solicitud',
-            style: TextStyle(color: Colors.red),
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16), // Bordes redondeados
           ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Solicitante: ${solicitud.nombreSolicitante}',
-                  style: const TextStyle(color: Colors.black)),
-              Text('Departamento: ${solicitud.departamento}',
-                  style: const TextStyle(color: Colors.black)),
-              Text('Descripción: ${solicitud.descripcion}',
-                  style: const TextStyle(color: Colors.black)),
-              Text('Prioridad: ${solicitud.prioridad}',
-                  style: const TextStyle(color: Colors.black)),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cerrar', style: TextStyle(color: Colors.red)),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white, // Fondo blanco
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10,
+                  offset: Offset(2, 2), // Sombra ligera
+                ),
+              ],
             ),
-          ],
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Detalles de la Solicitud',
+                  style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                Text('Solicitante: ${solicitud.nombreSolicitante}',
+                    style: const TextStyle(color: Colors.black)),
+                Text('Departamento: ${solicitud.departamento}',
+                    style: const TextStyle(color: Colors.black)),
+                Text('Descripción: ${solicitud.descripcion}',
+                    style: const TextStyle(color: Colors.black)),
+                Text('Prioridad: ${solicitud.prioridad}',
+                    style: const TextStyle(color: Colors.black)),
+                const SizedBox(height: 20),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('Cerrar',
+                        style: TextStyle(color: Colors.red)),
+                  ),
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
@@ -254,7 +299,7 @@ class _BusquedaMantenimientoWidgetState
     final status = await Permission.storage.request();
 
     if (status.isGranted) {
-      // Genera el PDF
+      // Generar el PDF
       final pdf = pw.Document();
       pdf.addPage(
         pw.Page(
@@ -269,30 +314,36 @@ class _BusquedaMantenimientoWidgetState
       );
 
       try {
-        // Guardar el PDF en la carpeta de documentos
-        final directory =
-            await getTemporaryDirectory(); // Cambia a `getExternalStorageDirectory` si pruebas en un dispositivo Android
-        final file = File(
-            '${directory.path}/solicitud_mantenimiento_${DateTime.now().millisecondsSinceEpoch}.pdf');
+        // Obtén el directorio de descargas
+        final directory = await getExternalStorageDirectory();
+        final filePath =
+            '${directory!.path}/solicitud_mantenimiento_${DateTime.now().millisecondsSinceEpoch}.pdf';
+        final file = File(filePath);
         await file.writeAsBytes(await pdf.save());
 
         // Mostrar SnackBar si el PDF se guardó correctamente
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('PDF generado correctamente.'),
+          SnackBar(
+            content: Text('PDF guardado en $filePath'),
             backgroundColor: Colors.green,
           ),
         );
+
+        // Espera un poco antes de abrir el menú de compartir para asegurar que el archivo esté accesible
+        await Future.delayed(const Duration(milliseconds: 500));
+
+        // Compartir el archivo PDF
+        Share.shareFiles([filePath], text: 'Aquí está el PDF solicitado');
       } catch (e) {
         // Mensaje de error en caso de fallo
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error al generar PDF: $e'),
+            content: Text('Error al guardar o compartir PDF: $e'),
             backgroundColor: Colors.red,
           ),
         );
       }
-    } else if (status.isDenied || status.isPermanentlyDenied) {
+    } else {
       // Mensaje si el permiso fue denegado o está permanentemente denegado
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -300,8 +351,6 @@ class _BusquedaMantenimientoWidgetState
           backgroundColor: Colors.orange,
         ),
       );
-    } else {
-      print('Permisos no concedidos o no disponibles en este entorno.');
     }
   }
 }

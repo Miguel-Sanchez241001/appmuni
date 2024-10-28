@@ -1,6 +1,7 @@
 import 'package:appmuni/features/mantenimientos/presentation/viewmodels/busquedasolicitudes_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../widgets/estado_widget.dart';
 import '../widgets/formulario_widget.dart';
 import '../widgets/consulta_widget.dart';
 
@@ -75,7 +76,7 @@ class _MantenimientoPageState extends State<MantenimientoPage>
                 children: [
                   FormularioPage(opcion: 'REGISTRAR MANTENIMIENTO'),
                   BusquedaMantenimientoWidget(),
-                  FormularioPage(opcion: 'APROBAR/RECHAZAR MANTENIMIENTO'),
+                  EstadoWidget(),
                 ],
               ),
             ),

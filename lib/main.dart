@@ -4,6 +4,7 @@ import 'package:appmuni/features/usuarios/presentation/viewmodels/register_viewm
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'features/mantenimientos/presentation/viewmodels/estado_viewmodel.dart';
 import 'features/usuarios/presentation/pages/home_page.dart';
 import 'features/usuarios/presentation/pages/login_page.dart';
 import 'features/usuarios/presentation/viewmodels/login_viewmodel.dart';
@@ -17,6 +18,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => LoginViewModel()),
         ChangeNotifierProvider(create: (_) => RegisterViewModel()),
         ChangeNotifierProvider(create: (_) => FormularioViewModel()),
+        ChangeNotifierProvider(create: (_) => EstadoViewModel()),
         BlocProvider(create: (_) => LoginBloc()),
       ],
       child: const MyApp(),
