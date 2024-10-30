@@ -1,7 +1,8 @@
 import 'package:appmuni/features/usuarios/presentation/viewmodels/register_viewmodel.dart';
+import 'package:appmuni/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
- 
+
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
 
@@ -19,7 +20,7 @@ class RegisterPage extends StatelessWidget {
             child: Container(
               height: 180,
               decoration: const BoxDecoration(
-                color: Colors.red,
+                color: AppColors.primary,
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(100),
                   bottomRight: Radius.circular(100),
@@ -35,14 +36,13 @@ class RegisterPage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Column(
                   children: [
-           
                     Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(16),
-                        boxShadow:const  [
-                            BoxShadow(
+                        boxShadow: const [
+                          BoxShadow(
                             color: Colors.black12,
                             blurRadius: 10,
                             spreadRadius: 5,
@@ -56,7 +56,7 @@ class RegisterPage extends StatelessWidget {
                             child: Text(
                               'REGISTRO DE DATOS',
                               style: TextStyle(
-                                color: Colors.red,
+                                color: AppColors.primary,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20,
                               ),
@@ -64,38 +64,34 @@ class RegisterPage extends StatelessWidget {
                           ),
                           SizedBox(height: 20),
                           // Campos de texto
-                          _buildTextField(
-                              context, 'Nombres', false, (value) {
+                          _buildTextField(context, 'Nombres', false, (value) {
                             Provider.of<RegisterViewModel>(context,
                                     listen: false)
                                 .setFirstName(value);
                           }),
-                          _buildTextField(
-                              context, 'Apellidos', false, (value) {
+                          _buildTextField(context, 'Apellidos', false, (value) {
                             Provider.of<RegisterViewModel>(context,
                                     listen: false)
                                 .setLastName(value);
                           }),
-                          _buildTextField(
-                              context, 'Celular', false, (value) {
+                          _buildTextField(context, 'Celular', false, (value) {
                             Provider.of<RegisterViewModel>(context,
                                     listen: false)
                                 .setPhoneNumber(value);
                           }),
-                          _buildTextField(
-                              context, 'Correo', false, (value) {
+                          _buildTextField(context, 'Correo', false, (value) {
                             Provider.of<RegisterViewModel>(context,
                                     listen: false)
                                 .setEmail(value);
                           }),
-                          _buildPasswordField(
-                              context, 'Contraseña', true, (value) {
+                          _buildPasswordField(context, 'Contraseña', true,
+                              (value) {
                             Provider.of<RegisterViewModel>(context,
                                     listen: false)
                                 .setPassword(value);
                           }),
-                          _buildPasswordField(context, 'Confirmar Contraseña',
-                              true, (value) {
+                          _buildPasswordField(
+                              context, 'Confirmar Contraseña', true, (value) {
                             Provider.of<RegisterViewModel>(context,
                                     listen: false)
                                 .setConfirmPassword(value);
@@ -110,7 +106,7 @@ class RegisterPage extends StatelessWidget {
                                       ? null
                                       : () => viewModel.register(),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.red,
+                                    backgroundColor: AppColors.primary,
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 40, vertical: 12),
                                     shape: RoundedRectangleBorder(
@@ -147,17 +143,17 @@ class RegisterPage extends StatelessWidget {
   }
 
   // Método para construir los campos de texto
-  Widget _buildTextField(
-      BuildContext context, String label, bool isPassword, Function(String) onChanged) {
+  Widget _buildTextField(BuildContext context, String label, bool isPassword,
+      Function(String) onChanged) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: TextFormField(
         obscureText: isPassword,
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: const TextStyle(color: Colors.red),
-          focusedBorder:  const UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.red),
+          labelStyle: const TextStyle(color: AppColors.primary),
+          focusedBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: AppColors.primary),
           ),
         ),
         onChanged: onChanged,
@@ -166,8 +162,8 @@ class RegisterPage extends StatelessWidget {
   }
 
   // Método para construir los campos de contraseña con ícono de visibilidad
-  Widget _buildPasswordField(
-      BuildContext context, String label, bool isPassword, Function(String) onChanged) {
+  Widget _buildPasswordField(BuildContext context, String label,
+      bool isPassword, Function(String) onChanged) {
     return Consumer<RegisterViewModel>(
       builder: (context, viewModel, child) {
         return Padding(
@@ -178,9 +174,9 @@ class RegisterPage extends StatelessWidget {
                 : viewModel.isShowConfirmPassword,
             decoration: InputDecoration(
               labelText: label,
-              labelStyle: const TextStyle(color: Colors.red),
+              labelStyle: const TextStyle(color: AppColors.primary),
               focusedBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.red),
+                borderSide: BorderSide(color: AppColors.primary),
               ),
               suffixIcon: IconButton(
                 icon: Icon(
@@ -191,7 +187,7 @@ class RegisterPage extends StatelessWidget {
                       : (viewModel.isShowConfirmPassword
                           ? Icons.visibility_off
                           : Icons.visibility),
-                  color: Colors.red,
+                  color: AppColors.primary,
                 ),
                 onPressed: () {
                   if (label == 'Contraseña') {

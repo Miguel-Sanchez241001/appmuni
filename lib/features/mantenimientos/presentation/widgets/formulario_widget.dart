@@ -1,4 +1,5 @@
 import 'package:appmuni/features/mantenimientos/presentation/viewmodels/formulario_viewmodel.dart';
+import 'package:appmuni/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -40,23 +41,23 @@ class FormularioPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Formulario - $opcion',
+                    '$opcion',
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.red,
+                      color: AppColors.primary,
                     ),
                   ),
                   const SizedBox(height: 10),
                   _buildTextField(
                     context,
-                    label: 'Nombre del Solicitante',
+                    label: 'Nombre del equipo o Usuario',
                     controller: nombreController,
                     onChanged: (value) => viewModel.setNombre(value),
                   ),
                   _buildTextField(
                     context,
-                    label: 'Departamento',
+                    label: 'Sede',
                     controller: departamentoController,
                     onChanged: (value) => viewModel.setDepartamento(value),
                   ),
@@ -84,7 +85,7 @@ class FormularioPage extends StatelessWidget {
                             departamentoController, descripcionController);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
+                        backgroundColor: AppColors.primary,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 40, vertical: 12),
                         shape: RoundedRectangleBorder(
@@ -121,9 +122,9 @@ class FormularioPage extends StatelessWidget {
         maxLines: maxLines,
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: const TextStyle(color: Colors.red),
+          labelStyle: const TextStyle(color: AppColors.primary),
           focusedBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.red),
+            borderSide: BorderSide(color: AppColors.primary),
           ),
         ),
         onChanged: onChanged,
@@ -139,12 +140,12 @@ class FormularioPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: Colors.red)),
+        Text(label, style: const TextStyle(color: AppColors.primary)),
         const SizedBox(height: 5),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.red),
+            border: Border.all(color: AppColors.primary),
             borderRadius: BorderRadius.circular(8),
           ),
           child: DropdownButton<String>(
@@ -178,7 +179,7 @@ class FormularioPage extends StatelessWidget {
           backgroundColor: Colors.white, // Fondo blanco para el diálogo
           title: const Text(
             'Confirmar envío',
-            style: TextStyle(color: Colors.red), // Título en color rojo
+            style: TextStyle(color: AppColors.primary), // Título en color rojo
           ),
           content: const Text(
             '¿Está seguro de que desea enviar esta solicitud?',
@@ -192,7 +193,7 @@ class FormularioPage extends StatelessWidget {
               child: const Text('Cancelar'),
               style: TextButton.styleFrom(
                 foregroundColor:
-                    Colors.red, // Texto rojo en el botón "Cancelar"
+                    AppColors.primary, // Texto rojo en el botón "Cancelar"
               ),
             ),
             TextButton(
@@ -209,13 +210,14 @@ class FormularioPage extends StatelessWidget {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Solicitud enviada correctamente'),
-                    backgroundColor: Colors.red, // Fondo rojo para el SnackBar
+                    backgroundColor:
+                        AppColors.primary, // Fondo rojo para el SnackBar
                   ),
                 );
               },
               child: const Text('Aceptar'),
               style: TextButton.styleFrom(
-                backgroundColor: Colors.red, // Fondo rojo
+                backgroundColor: AppColors.primary, // Fondo rojo
                 foregroundColor:
                     Colors.white, // Texto blanco en el botón "Aceptar"
               ),

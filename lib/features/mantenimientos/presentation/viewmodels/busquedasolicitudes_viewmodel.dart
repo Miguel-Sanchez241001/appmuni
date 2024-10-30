@@ -17,9 +17,11 @@ class SolicitudMantenimiento {
 class BusquedaMantenimientoViewModel extends ChangeNotifier {
   String _nombreBuscado = '';
   String _departamentoBuscado = '';
-  String _prioridadBuscada =
-      'Todos'; // Establece el valor predeterminado en "Todos"
-
+  String _marca = 'VASTEC COMMANDER G8';
+  String _monitor = 'Seleccione';
+  String _teclado = 'Seleccione';
+  String _prioridadBuscada = 'Todos';
+  String _numSerie = '';
   List<SolicitudMantenimiento> _resultadosBusqueda = [];
 
   // Datos de prueba
@@ -46,6 +48,11 @@ class BusquedaMantenimientoViewModel extends ChangeNotifier {
 
   List<SolicitudMantenimiento> get resultadosBusqueda => _resultadosBusqueda;
   String get prioridadBuscada => _prioridadBuscada;
+  String get marca => _marca;
+  String get numSerie => _numSerie;
+  String get monitor => _monitor;
+
+  String get teclado => _teclado;
 
   void setNombreBuscado(String nombre) {
     _nombreBuscado = nombre;
@@ -57,8 +64,18 @@ class BusquedaMantenimientoViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setNumeroSerie(String numSerie) {
+    _numSerie = numSerie;
+    notifyListeners();
+  }
+
   void setPrioridadBuscada(String prioridad) {
     _prioridadBuscada = prioridad;
+    notifyListeners();
+  }
+
+  void setMarca(String marca) {
+    _marca = marca;
     notifyListeners();
   }
 

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:appmuni/features/mantenimientos/presentation/viewmodels/busquedasolicitudes_viewmodel.dart';
+import 'package:appmuni/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -40,22 +41,95 @@ class _BusquedaMantenimientoWidgetState
           ),
           child: Column(
             children: [
-              const SizedBox(height: 20),
               Text(
-                'Buscar Solicitudes de Mantenimiento',
+                'Registro de mantenimiento',
                 style: TextStyle(
                     fontSize: 20,
-                    color: Colors.red,
+                    color: AppColors.primary,
                     fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               _buildTextField(
-                label: 'Nombre del Solicitante',
+                label: 'Nombre del Area',
                 onChanged: (value) => viewModel.setNombreBuscado(value),
               ),
               _buildTextField(
-                label: 'Departamento',
+                label: 'Sede',
                 onChanged: (value) => viewModel.setDepartamentoBuscado(value),
+              ),
+              _buildDropdown(
+                label: 'CPU (MARCA - MODELO) ',
+                items: [
+                  'VASTEC COMMANDER G8',
+                  'HP ELITEDESK 600 G1',
+                  'HP ELITEDESK 800 G1',
+                  'HP PRODESK 400 G5',
+                  'HP PRODESK 400 G6',
+                  'HP PRODESK 400 G7',
+                  'HP PRODESK 600 G4',
+                  'HP PRODESK 600 G5',
+                  'ANTRYX',
+                  'RHINOBOX KEROS SFF 5010',
+                  'ADVANCE VO1087',
+                ],
+                value: viewModel.marca,
+                onChanged: (value) => viewModel.setMarca(value!),
+              ),
+              _buildTextField(
+                label: 'Numero de serie (CPU)',
+                onChanged: (value) => viewModel.setNumeroSerie(value),
+              ),
+              const SizedBox(height: 10),
+              _buildDropdown(
+                label: 'Monitor (MARCA - MODELO) ',
+                items: [
+                  'Seleccione',
+                  'ADVANCE ADV-5023N',
+                  'DELL E2216H',
+                  'HP E233',
+                  'LG 22MK600M',
+                  'LG 24MK430H',
+                  'LG 20M45A-B',
+                  'LG 22MK430H-B',
+                  'LG 22MK400H-B',
+                  'SAMSUNG SR4C310EAL',
+                  'SAMSUNG S24R35AFHN',
+                  'SAMSUNG S22A33ANHL',
+                  'SAMSUNG S20D300GNA',
+                  'TEROS TE-3130',
+                  'TEROS TE-24FHD8',
+                ],
+                value: viewModel.monitor,
+                onChanged: (value) => viewModel.setMarca(value!),
+              ),
+              _buildTextField(
+                label: 'Numero de serie (Monitor)',
+                onChanged: (value) => viewModel.setNumeroSerie(value),
+              ),
+              const SizedBox(height: 10),
+              _buildDropdown(
+                label: 'Teclado (MARCA) ',
+                items: [
+                  'Seleccione',
+                  'LOGITECH',
+                  'HP',
+                  'GENIUS',
+                  'MICROSOFT',
+                  'COMPAQ',
+                  'BENQ',
+                  'HALION',
+                  'DELL',
+                  'XTECH',
+                  'MAXELL',
+                  'SEISA',
+                  'MICRONICS',
+                ],
+                value: viewModel.teclado,
+                onChanged: (value) => viewModel.setMarca(value!),
+              ),
+              _buildTextField(
+                label: '(Modelo - Serie)',
+                onChanged: (value) => viewModel.setNumeroSerie(value),
               ),
               _buildDropdown(
                 label: 'Prioridad',
@@ -70,7 +144,7 @@ class _BusquedaMantenimientoWidgetState
                   print("Buscando..."); // Mensaje en consola para depuración
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
+                  backgroundColor: AppColors.primary,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                   shape: RoundedRectangleBorder(
@@ -107,9 +181,9 @@ class _BusquedaMantenimientoWidgetState
       child: TextField(
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: const TextStyle(color: Colors.red),
+          labelStyle: const TextStyle(color: AppColors.primary),
           focusedBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.red),
+            borderSide: BorderSide(color: AppColors.primary),
           ),
         ),
         onChanged: onChanged,
@@ -126,12 +200,12 @@ class _BusquedaMantenimientoWidgetState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: Colors.red)),
+        Text(label, style: const TextStyle(color: AppColors.primary)),
         const SizedBox(height: 5),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.red),
+            border: Border.all(color: AppColors.primary),
             borderRadius: BorderRadius.circular(8),
           ),
           child: DropdownButton<String>(
@@ -193,7 +267,7 @@ class _BusquedaMantenimientoWidgetState
             Text(
               solicitud.nombreSolicitante,
               style: const TextStyle(
-                  fontWeight: FontWeight.bold, color: Colors.red),
+                  fontWeight: FontWeight.bold, color: AppColors.primary),
             ),
             Text(solicitud.departamento),
             Text('Descripción: ${solicitud.descripcion}'),
@@ -210,7 +284,7 @@ class _BusquedaMantenimientoWidgetState
                     fontWeight: FontWeight.bold, color: Colors.white),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
+                backgroundColor: AppColors.primary,
               ),
             ),
             const SizedBox(height: 10),
@@ -225,7 +299,7 @@ class _BusquedaMantenimientoWidgetState
                     fontWeight: FontWeight.bold, color: Colors.white),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
+                backgroundColor: AppColors.primary,
               ),
             ),
           ],
@@ -263,7 +337,7 @@ class _BusquedaMantenimientoWidgetState
                 const Text(
                   'Detalles de la Solicitud',
                   style: TextStyle(
-                      color: Colors.red,
+                      color: AppColors.primary,
                       fontSize: 18,
                       fontWeight: FontWeight.bold),
                 ),
@@ -282,7 +356,7 @@ class _BusquedaMantenimientoWidgetState
                   child: TextButton(
                     onPressed: () => Navigator.of(context).pop(),
                     child: const Text('Cerrar',
-                        style: TextStyle(color: Colors.red)),
+                        style: TextStyle(color: AppColors.primary)),
                   ),
                 ),
               ],
@@ -339,7 +413,7 @@ class _BusquedaMantenimientoWidgetState
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error al guardar o compartir PDF: $e'),
-            backgroundColor: Colors.red,
+            backgroundColor: AppColors.primary,
           ),
         );
       }

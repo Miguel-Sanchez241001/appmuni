@@ -1,3 +1,5 @@
+import 'package:appmuni/features/mantenimientos/presentation/widgets/estado_widget.dart';
+import 'package:appmuni/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +24,7 @@ class _HomePageState extends State<HomePage> {
     ),
     const BottomNavigationBarItem(
       icon: Icon(Icons.article), // Ícono para Mantenimiento
-      label: 'Mantenimiento',
+      label: 'Funciones',
     ),
     const BottomNavigationBarItem(
       icon: Icon(Icons.receipt), // Ícono para Reportes
@@ -33,8 +35,6 @@ class _HomePageState extends State<HomePage> {
       label: 'Equipos',
     ),
   ];
-
-
 
   // Lista de páginas para mostrar según el índice seleccionado
   final List<Widget> _pages = [
@@ -47,8 +47,8 @@ class _HomePageState extends State<HomePage> {
       ],
     ),
     // Páginas para las otras secciones
-    Center(child: MantenimientoPage() ),
-    const Center(child: Text('Reportes', style: TextStyle(fontSize: 24))),
+    Center(child: MantenimientoPage()),
+    const Center(child: EstadoWidget()),
     const Center(child: Text('Equipos', style: TextStyle(fontSize: 24))),
   ];
 
@@ -62,10 +62,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final loginViewModel = Provider.of<LoginViewModel>(context);
-     return Scaffold(
-      backgroundColor: Colors.red,
+    return Scaffold(
+      backgroundColor: AppColors.primary,
       appBar: AppBar(
-        backgroundColor: Colors.red,
+        backgroundColor: AppColors.primary,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -82,7 +82,8 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
             IconButton(
-              icon: const Icon(Icons.exit_to_app, color: Colors.white, size: 30),
+              icon:
+                  const Icon(Icons.exit_to_app, color: Colors.white, size: 30),
               // Ícono de logout
               onPressed: () {
                 loginViewModel.logout();
@@ -108,7 +109,7 @@ class _HomePageState extends State<HomePage> {
 
             currentIndex: _selectedIndex,
             onTap: _onItemTapped,
-            backgroundColor: Colors.red,
+            backgroundColor: AppColors.primary,
             // Color de fondo del BottomNavigationBar
             selectedItemColor: Colors.white,
             // Color del ítem seleccionado

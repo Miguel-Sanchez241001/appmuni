@@ -1,6 +1,7 @@
 import 'package:appmuni/features/mantenimientos/presentation/viewmodels/estado_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:appmuni/theme/colors.dart';
 
 class EstadoWidget extends StatefulWidget {
   const EstadoWidget({Key? key}) : super(key: key);
@@ -25,7 +26,8 @@ class _EstadoWidgetState extends State<EstadoWidget> {
             Expanded(child: _buildFiltroEstadoDropdown(viewModel)),
             ElevatedButton(
               onPressed: () => viewModel.filtrarSolicitudes(_filtroEstado),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
               child: const Text(
                 'Buscar',
                 style: TextStyle(color: Colors.white),
@@ -64,7 +66,7 @@ class _EstadoWidgetState extends State<EstadoWidget> {
                     Text(
                       'Descripción: ${solicitud.descripcion}',
                       style: const TextStyle(
-                        color: Colors.red,
+                        color: AppColors.primary,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -132,7 +134,7 @@ class _EstadoWidgetState extends State<EstadoWidget> {
           backgroundColor: Colors.white,
           title: const Text(
             'Confirmar Cambio de Estado',
-            style: TextStyle(color: Colors.red),
+            style: TextStyle(color: AppColors.primary),
           ),
           content: Text(
             '¿Estás seguro de cambiar el estado a "$nuevoEstado"?',
@@ -141,8 +143,8 @@ class _EstadoWidgetState extends State<EstadoWidget> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child:
-                  const Text('Cancelar', style: TextStyle(color: Colors.red)),
+              child: const Text('Cancelar',
+                  style: TextStyle(color: AppColors.primary)),
             ),
             TextButton(
               onPressed: () {
@@ -157,7 +159,7 @@ class _EstadoWidgetState extends State<EstadoWidget> {
               },
               child:
                   const Text('Aceptar', style: TextStyle(color: Colors.white)),
-              style: TextButton.styleFrom(backgroundColor: Colors.red),
+              style: TextButton.styleFrom(backgroundColor: AppColors.primary),
             ),
           ],
         );

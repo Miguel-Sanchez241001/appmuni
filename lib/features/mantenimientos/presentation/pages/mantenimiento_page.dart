@@ -1,4 +1,5 @@
 import 'package:appmuni/features/mantenimientos/presentation/viewmodels/busquedasolicitudes_viewmodel.dart';
+import 'package:appmuni/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../widgets/estado_widget.dart';
@@ -19,7 +20,7 @@ class _MantenimientoPageState extends State<MantenimientoPage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
 
     // Escuchar cambios de índice en el TabController
     _tabController.addListener(() {
@@ -48,13 +49,14 @@ class _MantenimientoPageState extends State<MantenimientoPage>
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Colors.red, // Fondo rojo para los tabs no seleccionados
+                color: AppColors
+                    .primary, // Fondo rojo para los tabs no seleccionados
                 borderRadius: BorderRadius.circular(8),
               ),
               child: TabBar(
                 controller: _tabController,
-                labelColor:
-                    Colors.red, // Color de texto para el tab seleccionado
+                labelColor: AppColors
+                    .primary, // Color de texto para el tab seleccionado
                 unselectedLabelColor: Colors
                     .white, // Color de texto para los tabs no seleccionados
                 indicator: BoxDecoration(
@@ -62,9 +64,8 @@ class _MantenimientoPageState extends State<MantenimientoPage>
                   borderRadius: BorderRadius.circular(8),
                 ),
                 tabs: [
-                  _buildFixedTab('Registrar'),
-                  _buildFixedTab('Consultar'),
-                  _buildFixedTab('Estado'),
+                  _buildFixedTab('Soporte'),
+                  _buildFixedTab('Mantemiento'),
                 ],
               ),
             ),
@@ -74,9 +75,8 @@ class _MantenimientoPageState extends State<MantenimientoPage>
               child: TabBarView(
                 controller: _tabController,
                 children: [
-                  FormularioPage(opcion: 'REGISTRAR MANTENIMIENTO'),
+                  FormularioPage(opcion: 'REGISTRO DE SOPORTE'),
                   BusquedaMantenimientoWidget(),
-                  EstadoWidget(),
                 ],
               ),
             ),
@@ -94,7 +94,7 @@ class _MantenimientoPageState extends State<MantenimientoPage>
         alignment: Alignment.center,
         child: Text(
           text,
-          style: const TextStyle(fontSize: 16),
+          style: const TextStyle(fontSize: 14),
         ),
       ),
     );
