@@ -1,4 +1,5 @@
 import 'package:appmuni/features/mantenimientos/presentation/widgets/estado_widget.dart';
+import 'package:appmuni/features/usuarios/presentation/widgets/muni_widget.dart';
 import 'package:appmuni/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -38,15 +39,7 @@ class _HomePageState extends State<HomePage> {
 
   // Lista de páginas para mostrar según el índice seleccionado
   final List<Widget> _pages = [
-    // Pantalla inicial con el logo y el texto
-    Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Image.asset('assets/images/logo.png', height: 150), // Imagen del logo
-        const SizedBox(height: 20),
-      ],
-    ),
-    // Páginas para las otras secciones
+    Center(child: MunicipalInfoWidget()),
     Center(child: MantenimientoPage()),
     const Center(child: EstadoWidget()),
     const Center(child: Text('Equipos', style: TextStyle(fontSize: 24))),

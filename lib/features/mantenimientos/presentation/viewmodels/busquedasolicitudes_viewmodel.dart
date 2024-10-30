@@ -17,43 +17,27 @@ class SolicitudMantenimiento {
 class BusquedaMantenimientoViewModel extends ChangeNotifier {
   String _nombreBuscado = '';
   String _departamentoBuscado = '';
-  String _marca = 'VASTEC COMMANDER G8';
+  String _marca = 'Seleccione';
   String _monitor = 'Seleccione';
   String _teclado = 'Seleccione';
-  String _prioridadBuscada = 'Todos';
+  String _prioridadBuscada = 'Seleccione';
   String _numSerie = '';
+  String _numSerieMonitor = '';
+  String _numSerieTeclado = '';
   List<SolicitudMantenimiento> _resultadosBusqueda = [];
+  List<SolicitudMantenimiento> _solicitudes = [];
 
-  // Datos de prueba
-  final List<SolicitudMantenimiento> _solicitudes = [
-    SolicitudMantenimiento(
-      nombreSolicitante: 'Juan Perez',
-      departamento: 'TI',
-      descripcion: 'Reparación de impresora',
-      prioridad: 'Alta',
-    ),
-    SolicitudMantenimiento(
-      nombreSolicitante: 'Ana Gomez',
-      departamento: 'Finanzas',
-      descripcion: 'Actualización de software',
-      prioridad: 'Media',
-    ),
-    SolicitudMantenimiento(
-      nombreSolicitante: 'Carlos Ruiz',
-      departamento: 'Recursos Humanos',
-      descripcion: 'Problema con la red',
-      prioridad: 'Baja',
-    ),
-  ];
-
+  // Getters para obtener los valores actuales
   List<SolicitudMantenimiento> get resultadosBusqueda => _resultadosBusqueda;
   String get prioridadBuscada => _prioridadBuscada;
   String get marca => _marca;
-  String get numSerie => _numSerie;
   String get monitor => _monitor;
-
   String get teclado => _teclado;
+  String get numSerie => _numSerie;
+  String get numSerieMonitor => _numSerieMonitor;
+  String get numSerieTeclado => _numSerieTeclado;
 
+  // Métodos para actualizar los valores de los campos
   void setNombreBuscado(String nombre) {
     _nombreBuscado = nombre;
     notifyListeners();
@@ -64,8 +48,18 @@ class BusquedaMantenimientoViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setNumeroSerie(String numSerie) {
+  void setNumeroSerieCpu(String numSerie) {
     _numSerie = numSerie;
+    notifyListeners();
+  }
+
+  void setNumeroSerieMonitor(String numSerie) {
+    _numSerieMonitor = numSerie;
+    notifyListeners();
+  }
+
+  void setNumeroSerieTeclado(String numSerie) {
+    _numSerieTeclado = numSerie;
     notifyListeners();
   }
 
@@ -74,46 +68,45 @@ class BusquedaMantenimientoViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setMarca(String marca) {
+  void setMarcaCpu(String marca) {
     _marca = marca;
     notifyListeners();
   }
 
-  void resetBusqueda() {
-    _nombreBuscado = '';
-    _departamentoBuscado = '';
-    _prioridadBuscada = 'Todos';
-    _resultadosBusqueda = [];
+  void setMarcaTeclado(String teclado) {
+    _teclado = teclado;
     notifyListeners();
   }
 
-  void buscarSolicitudes() {
-    print("Buscando..."); // Mensaje en consola
+  void setMarcaMonitor(String monitor) {
+    _monitor = monitor;
+    notifyListeners();
+  }
 
-    // Si todos los filtros están vacíos o en "Todos", devuelve todas las solicitudes
-    if (_nombreBuscado.isEmpty &&
-        _departamentoBuscado.isEmpty &&
-        _prioridadBuscada == 'Todos') {
-      _resultadosBusqueda = List.from(
-          _solicitudes); // Clonamos la lista para evitar referencias directas
-    } else {
-      _resultadosBusqueda = _solicitudes.where((solicitud) {
-        final coincideNombre = _nombreBuscado.isEmpty ||
-            solicitud.nombreSolicitante
-                .toLowerCase()
-                .contains(_nombreBuscado.toLowerCase());
-        final coincideDepartamento = _departamentoBuscado.isEmpty ||
-            solicitud.departamento
-                .toLowerCase()
-                .contains(_departamentoBuscado.toLowerCase());
-        final coincidePrioridad = _prioridadBuscada == 'Todos' ||
-            solicitud.prioridad.toLowerCase() ==
-                _prioridadBuscada.toLowerCase();
+  /// Método para registrar una nueva solicitud
+  void registrarSolicitud() {
+    final nuevaSolicitud = SolicitudMantenimiento(
+      nombreSolicitante: _nombreBuscado,
+      departamento: _departamentoBuscado,
+      descripcion: 'CPU: $_marca, Monitor: $_monitor, Teclado: $_teclado',
+      prioridad: _prioridadBuscada,
+    );
 
-        return coincideNombre && coincideDepartamento && coincidePrioridad;
-      }).toList();
-    }
+    _solicitudes.add(nuevaSolicitud);
+    notifyListeners(); // Notifica cambios para actualizar la interfaz si es necesario
+  }
 
+  // Método opcional para resetear el formulario después del registro
+  void resetBusqueda() {
+    _nombreBuscado = '';
+    _departamentoBuscado = '';
+    _marca = 'Seleccione';
+    _monitor = 'Seleccione';
+    _teclado = 'Seleccione';
+    _prioridadBuscada = 'Seleccione';
+    _numSerie = '';
+    _numSerieMonitor = '';
+    _numSerieTeclado = '';
     notifyListeners();
   }
 }

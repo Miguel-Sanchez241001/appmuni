@@ -1,6 +1,4 @@
-
 import 'package:flutter/foundation.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterViewModel extends ChangeNotifier {
@@ -11,9 +9,14 @@ class RegisterViewModel extends ChangeNotifier {
   String _password = '';
   String _confirmPassword = '';
   bool _isLoading = false;
-  bool _isShowPassword = true;
-  bool _isShowConfirmPassword = true;
+  bool _isShowPassword = false;
+  bool _isShowConfirmPassword = false;
   String _errorMessage = '';
+
+  bool get isLoading => _isLoading;
+  bool get isShowPassword => _isShowPassword;
+  bool get isShowConfirmPassword => _isShowConfirmPassword;
+  String get errorMessage => _errorMessage;
 
   String get firstName => _firstName;
   String get lastName => _lastName;
@@ -21,98 +24,90 @@ class RegisterViewModel extends ChangeNotifier {
   String get email => _email;
   String get password => _password;
   String get confirmPassword => _confirmPassword;
-  bool get isLoading => _isLoading;
-  bool get isShowPassword => _isShowPassword;
-  bool get isShowConfirmPassword => _isShowConfirmPassword;
-  String get errorMessage => _errorMessage;
 
-  void setFirstName(String firstName) {
-    _firstName = firstName;
+  void setFirstName(String value) {
+    _firstName = value;
     notifyListeners();
   }
 
-  void setLastName(String lastName) {
-    _lastName = lastName;
+  void setLastName(String value) {
+    _lastName = value;
     notifyListeners();
   }
 
-  void setPhoneNumber(String phoneNumber) {
-    _phoneNumber = phoneNumber;
+  void setPhoneNumber(String value) {
+    _phoneNumber = value;
     notifyListeners();
   }
 
-  void setEmail(String email) {
-    _email = email;
+  void setEmail(String value) {
+    _email = value;
     notifyListeners();
   }
 
-  void setPassword(String password) {
-    _password = password;
+  void setPassword(String value) {
+    _password = value;
     notifyListeners();
   }
 
-  void setConfirmPassword(String confirmPassword) {
-    _confirmPassword = confirmPassword;
+  void setConfirmPassword(String value) {
+    _confirmPassword = value;
     notifyListeners();
   }
 
-  void setIsShowPassword(bool isShowPassword) {
-    _isShowPassword = isShowPassword;
+  void togglePasswordVisibility() {
+    _isShowPassword = !_isShowPassword;
     notifyListeners();
   }
 
-  void setIsShowConfirmPassword(bool isShowConfirmPassword) {
-    _isShowConfirmPassword = isShowConfirmPassword;
+  void toggleConfirmPasswordVisibility() {
+    _isShowConfirmPassword = !_isShowConfirmPassword;
     notifyListeners();
   }
 
-  // Método para registrar al usuario
+  void setErrorMessage(String message) {
+    _errorMessage = message;
+    notifyListeners();
+  }
+
+  bool isValidEmail(String email) {
+    final regex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+    return regex.hasMatch(email);
+  }
+
+  bool isValidPhone(String phone) {
+    final regex = RegExp(r'^9[0-9]{8}$');
+    return regex.hasMatch(phone);
+  }
+
   Future<void> register() async {
-    if (_password != _confirmPassword) {
-      _errorMessage = 'Las contraseñas no coinciden';
-      notifyListeners();
-      return;
-    }
-
     _isLoading = true;
     _errorMessage = '';
     notifyListeners();
 
-    await Future.delayed(Duration(seconds: 2)); // Simulamos un delay
-
-    // Aquí podrías realizar una llamada a la API para registrar al usuario
-    // Por ahora simulamos un registro exitoso y guardamos los datos en local
-    await _saveUserToPreferences();
+    await Future.delayed(const Duration(seconds: 2));
 
     _isLoading = false;
     notifyListeners();
   }
 
-  // Guardar el estado del usuario en SharedPreferences
   Future<void> _saveUserToPreferences() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('firstName', _firstName);
-    prefs.setString('lastName', _lastName);
-    prefs.setString('phoneNumber', _phoneNumber);
-    prefs.setString('email', _email);
-    prefs.setString('password', _password);
+    await prefs.setString('firstName', _firstName);
+    await prefs.setString('lastName', _lastName);
+    await prefs.setString('phoneNumber', _phoneNumber);
+    await prefs.setString('email', _email);
+    await prefs.setString('password', _password);
   }
 
-  // Cargar el estado del usuario desde SharedPreferences
-  Future<void> loadUserFromPreferences() async {
-    final prefs = await SharedPreferences.getInstance();
-    _firstName = prefs.getString('firstName') ?? '';
-    _lastName = prefs.getString('lastName') ?? '';
-    _phoneNumber = prefs.getString('phoneNumber') ?? '';
-    _email = prefs.getString('email') ?? '';
-    _password = prefs.getString('password') ?? '';
-    notifyListeners();
-  }
-
-  // Limpiar los datos de usuario almacenados
-  Future<void> clearPreferences() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
+  void clearFields() {
+    _firstName = '';
+    _lastName = '';
+    _phoneNumber = '';
+    _email = '';
+    _password = '';
+    _confirmPassword = '';
+    _errorMessage = '';
     notifyListeners();
   }
 }

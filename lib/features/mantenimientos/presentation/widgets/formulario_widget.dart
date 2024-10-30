@@ -3,19 +3,42 @@ import 'package:appmuni/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class FormularioPage extends StatelessWidget {
+class FormularioPage extends StatefulWidget {
   final String opcion;
 
   const FormularioPage({super.key, required this.opcion});
 
   @override
+  _FormularioPageState createState() => _FormularioPageState();
+}
+
+class _FormularioPageState extends State<FormularioPage> {
+  late TextEditingController nombreController;
+  late TextEditingController departamentoController;
+  late TextEditingController descripcionController;
+
+  @override
+  void initState() {
+    super.initState();
+    final viewModel = Provider.of<FormularioViewModel>(context, listen: false);
+    nombreController = TextEditingController(text: viewModel.nombre);
+    departamentoController =
+        TextEditingController(text: viewModel.departamento);
+    descripcionController =
+        TextEditingController(text: viewModel.descripcionProblema);
+  }
+
+  @override
+  void dispose() {
+    nombreController.dispose();
+    departamentoController.dispose();
+    descripcionController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<FormularioViewModel>(context);
-    final nombreController = TextEditingController(text: viewModel.nombre);
-    final departamentoController =
-        TextEditingController(text: viewModel.departamento);
-    final descripcionController =
-        TextEditingController(text: viewModel.descripcionProblema);
 
     return Center(
       child: SingleChildScrollView(
@@ -41,7 +64,7 @@ class FormularioPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '$opcion',
+                    widget.opcion,
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -50,19 +73,16 @@ class FormularioPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   _buildTextField(
-                    context,
                     label: 'Nombre del equipo o Usuario',
                     controller: nombreController,
                     onChanged: (value) => viewModel.setNombre(value),
                   ),
                   _buildTextField(
-                    context,
                     label: 'Sede',
                     controller: departamentoController,
                     onChanged: (value) => viewModel.setDepartamento(value),
                   ),
                   _buildTextField(
-                    context,
                     label: 'Descripción del Problema',
                     maxLines: 3,
                     controller: descripcionController,
@@ -71,7 +91,6 @@ class FormularioPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   _buildDropdown(
-                    context,
                     label: 'Prioridad',
                     items: ['Alta', 'Media', 'Baja'],
                     value: viewModel.prioridad,
@@ -81,8 +100,7 @@ class FormularioPage extends StatelessWidget {
                   Center(
                     child: ElevatedButton(
                       onPressed: () {
-                        _confirmarEnvio(context, viewModel, nombreController,
-                            departamentoController, descripcionController);
+                        _confirmarEnvio(context, viewModel);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
@@ -110,11 +128,12 @@ class FormularioPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(BuildContext context,
-      {required String label,
-      required TextEditingController controller,
-      int maxLines = 1,
-      required Function(String) onChanged}) {
+  Widget _buildTextField({
+    required String label,
+    required TextEditingController controller,
+    int maxLines = 1,
+    required Function(String) onChanged,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: TextField(
@@ -132,11 +151,12 @@ class FormularioPage extends StatelessWidget {
     );
   }
 
-  Widget _buildDropdown(BuildContext context,
-      {required String label,
-      required List<String> items,
-      required String value,
-      required ValueChanged<String?> onChanged}) {
+  Widget _buildDropdown({
+    required String label,
+    required List<String> items,
+    required String value,
+    required ValueChanged<String?> onChanged,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -165,25 +185,19 @@ class FormularioPage extends StatelessWidget {
     );
   }
 
-  void _confirmarEnvio(
-    BuildContext context,
-    FormularioViewModel viewModel,
-    TextEditingController nombreController,
-    TextEditingController departamentoController,
-    TextEditingController descripcionController,
-  ) {
+  void _confirmarEnvio(BuildContext context, FormularioViewModel viewModel) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Colors.white, // Fondo blanco para el diálogo
+          backgroundColor: Colors.white,
           title: const Text(
             'Confirmar envío',
-            style: TextStyle(color: AppColors.primary), // Título en color rojo
+            style: TextStyle(color: AppColors.primary),
           ),
           content: const Text(
             '¿Está seguro de que desea enviar esta solicitud?',
-            style: TextStyle(color: Colors.black), // Texto en color negro
+            style: TextStyle(color: Colors.black),
           ),
           actions: <Widget>[
             TextButton(
@@ -192,8 +206,7 @@ class FormularioPage extends StatelessWidget {
               },
               child: const Text('Cancelar'),
               style: TextButton.styleFrom(
-                foregroundColor:
-                    AppColors.primary, // Texto rojo en el botón "Cancelar"
+                foregroundColor: AppColors.primary,
               ),
             ),
             TextButton(
@@ -201,7 +214,6 @@ class FormularioPage extends StatelessWidget {
                 viewModel.enviarSolicitud();
                 viewModel.limpiarFormulario();
 
-                // Limpiar controladores para que reflejen el estado del ViewModel
                 nombreController.clear();
                 departamentoController.clear();
                 descripcionController.clear();
@@ -210,16 +222,14 @@ class FormularioPage extends StatelessWidget {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Solicitud enviada correctamente'),
-                    backgroundColor:
-                        AppColors.primary, // Fondo rojo para el SnackBar
+                    backgroundColor: AppColors.primary,
                   ),
                 );
               },
               child: const Text('Aceptar'),
               style: TextButton.styleFrom(
-                backgroundColor: AppColors.primary, // Fondo rojo
-                foregroundColor:
-                    Colors.white, // Texto blanco en el botón "Aceptar"
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
               ),
             ),
           ],

@@ -1,10 +1,10 @@
 import 'package:appmuni/features/mantenimientos/presentation/viewmodels/busquedasolicitudes_viewmodel.dart';
+import 'package:appmuni/features/mantenimientos/presentation/widgets/formulario_mantenimiento_widget.dart';
 import 'package:appmuni/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../widgets/estado_widget.dart';
 import '../widgets/formulario_widget.dart';
-import '../widgets/consulta_widget.dart';
 
 class MantenimientoPage extends StatefulWidget {
   const MantenimientoPage({super.key});

@@ -1,18 +1,45 @@
+import 'package:appmuni/core/utils/snackbar_util.dart';
+import 'package:appmuni/features/usuarios/presentation/pages/login_page.dart';
 import 'package:appmuni/features/usuarios/presentation/viewmodels/register_viewmodel.dart';
 import 'package:appmuni/theme/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
   @override
+  _RegisterPageState createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _phoneNumberController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final registerViewModel = Provider.of<RegisterViewModel>(context);
+
     return Scaffold(
       backgroundColor: Colors.grey[200],
       body: Stack(
         children: [
-          // Semicírculo en la parte superior
           Positioned(
             top: 0,
             left: 0,
@@ -28,7 +55,6 @@ class RegisterPage extends StatelessWidget {
               ),
             ),
           ),
-          // Formulario de registro
           Positioned.fill(
             top: 100,
             child: SingleChildScrollView(
@@ -52,7 +78,7 @@ class RegisterPage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Center(
+                          const Center(
                             child: Text(
                               'REGISTRO DE DATOS',
                               style: TextStyle(
@@ -62,49 +88,65 @@ class RegisterPage extends StatelessWidget {
                               ),
                             ),
                           ),
-                          SizedBox(height: 20),
-                          // Campos de texto
-                          _buildTextField(context, 'Nombres', false, (value) {
-                            Provider.of<RegisterViewModel>(context,
-                                    listen: false)
-                                .setFirstName(value);
-                          }),
-                          _buildTextField(context, 'Apellidos', false, (value) {
-                            Provider.of<RegisterViewModel>(context,
-                                    listen: false)
-                                .setLastName(value);
-                          }),
-                          _buildTextField(context, 'Celular', false, (value) {
-                            Provider.of<RegisterViewModel>(context,
-                                    listen: false)
-                                .setPhoneNumber(value);
-                          }),
-                          _buildTextField(context, 'Correo', false, (value) {
-                            Provider.of<RegisterViewModel>(context,
-                                    listen: false)
-                                .setEmail(value);
-                          }),
-                          _buildPasswordField(context, 'Contraseña', true,
-                              (value) {
-                            Provider.of<RegisterViewModel>(context,
-                                    listen: false)
-                                .setPassword(value);
-                          }),
-                          _buildPasswordField(
-                              context, 'Confirmar Contraseña', true, (value) {
-                            Provider.of<RegisterViewModel>(context,
-                                    listen: false)
-                                .setConfirmPassword(value);
-                          }),
                           const SizedBox(height: 20),
-                          // Botón de registro
+                          _buildTextField(
+                            controller: _firstNameController,
+                            label: 'Nombres',
+                            onChanged: registerViewModel.setFirstName,
+                          ),
+                          _buildTextField(
+                            controller: _lastNameController,
+                            label: 'Apellidos',
+                            onChanged: registerViewModel.setLastName,
+                          ),
+                          _buildTextField(
+                            controller: _phoneNumberController,
+                            label: 'Celular',
+                            keyboardType: TextInputType.phone,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            onChanged: registerViewModel.setPhoneNumber,
+                          ),
+                          _buildTextField(
+                            controller: _emailController,
+                            label: 'Correo',
+                            keyboardType: TextInputType.emailAddress,
+                            onChanged: registerViewModel.setEmail,
+                          ),
+                          _buildPasswordField(
+                            controller: _passwordController,
+                            label: 'Contraseña',
+                            onChanged: registerViewModel.setPassword,
+                            isPasswordVisible: registerViewModel.isShowPassword,
+                            togglePasswordVisibility:
+                                registerViewModel.togglePasswordVisibility,
+                          ),
+                          _buildPasswordField(
+                            controller: _confirmPasswordController,
+                            label: 'Confirmar Contraseña',
+                            onChanged: registerViewModel.setConfirmPassword,
+                            isPasswordVisible:
+                                registerViewModel.isShowConfirmPassword,
+                            togglePasswordVisibility: registerViewModel
+                                .toggleConfirmPasswordVisibility,
+                          ),
+                          const SizedBox(height: 20),
                           Center(
                             child: Consumer<RegisterViewModel>(
                               builder: (context, viewModel, child) {
                                 return ElevatedButton(
                                   onPressed: viewModel.isLoading
                                       ? null
-                                      : () => viewModel.register(),
+                                      : () async {
+                                          if (_validateInputs(viewModel)) {
+                                            _showConfirmationDialog(
+                                                context, viewModel);
+                                          } else {
+                                            showCustomSnackBar(context,
+                                                viewModel.errorMessage);
+                                          }
+                                        },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: AppColors.primary,
                                     padding: const EdgeInsets.symmetric(
@@ -114,10 +156,10 @@ class RegisterPage extends StatelessWidget {
                                     ),
                                   ),
                                   child: viewModel.isLoading
-                                      ? CircularProgressIndicator(
+                                      ? const CircularProgressIndicator(
                                           color: Colors.white,
                                         )
-                                      : Text(
+                                      : const Text(
                                           'REGISTRAR',
                                           style: TextStyle(
                                             color: Colors.white,
@@ -142,13 +184,19 @@ class RegisterPage extends StatelessWidget {
     );
   }
 
-  // Método para construir los campos de texto
-  Widget _buildTextField(BuildContext context, String label, bool isPassword,
-      Function(String) onChanged) {
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required Function(String) onChanged,
+    TextInputType keyboardType = TextInputType.text,
+    List<TextInputFormatter>? inputFormatters,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: TextFormField(
-        obscureText: isPassword,
+      child: TextField(
+        controller: controller,
+        keyboardType: keyboardType,
+        inputFormatters: inputFormatters,
         decoration: InputDecoration(
           labelText: label,
           labelStyle: const TextStyle(color: AppColors.primary),
@@ -161,46 +209,119 @@ class RegisterPage extends StatelessWidget {
     );
   }
 
-  // Método para construir los campos de contraseña con ícono de visibilidad
-  Widget _buildPasswordField(BuildContext context, String label,
-      bool isPassword, Function(String) onChanged) {
-    return Consumer<RegisterViewModel>(
-      builder: (context, viewModel, child) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
-          child: TextFormField(
-            obscureText: label == 'Contraseña'
-                ? viewModel.isShowPassword
-                : viewModel.isShowConfirmPassword,
-            decoration: InputDecoration(
-              labelText: label,
-              labelStyle: const TextStyle(color: AppColors.primary),
-              focusedBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(color: AppColors.primary),
-              ),
-              suffixIcon: IconButton(
-                icon: Icon(
-                  label == 'Contraseña'
-                      ? (viewModel.isShowPassword
-                          ? Icons.visibility_off
-                          : Icons.visibility)
-                      : (viewModel.isShowConfirmPassword
-                          ? Icons.visibility_off
-                          : Icons.visibility),
-                  color: AppColors.primary,
-                ),
-                onPressed: () {
-                  if (label == 'Contraseña') {
-                    viewModel.setIsShowPassword(!viewModel.isShowPassword);
-                  } else {
-                    viewModel.setIsShowConfirmPassword(
-                        !viewModel.isShowConfirmPassword);
-                  }
-                },
-              ),
-            ),
-            onChanged: onChanged,
+  Widget _buildPasswordField({
+    required TextEditingController controller,
+    required String label,
+    required Function(String) onChanged,
+    required bool isPasswordVisible,
+    required VoidCallback togglePasswordVisibility,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: TextField(
+        controller: controller,
+        obscureText: !isPasswordVisible,
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(color: AppColors.primary),
+          focusedBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: AppColors.primary),
           ),
+          suffixIcon: IconButton(
+            icon: Icon(
+              isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+              color: AppColors.primary,
+            ),
+            onPressed: togglePasswordVisibility,
+          ),
+        ),
+        onChanged: onChanged,
+      ),
+    );
+  }
+
+  bool _validateInputs(RegisterViewModel viewModel) {
+    if (viewModel.firstName.isEmpty ||
+        viewModel.lastName.isEmpty ||
+        viewModel.phoneNumber.isEmpty ||
+        viewModel.email.isEmpty ||
+        viewModel.password.isEmpty ||
+        viewModel.confirmPassword.isEmpty) {
+      viewModel.setErrorMessage('Por favor, complete todos los campos.');
+      return false;
+    } else if (!viewModel.isValidEmail(viewModel.email)) {
+      viewModel.setErrorMessage('Por favor, ingrese un correo válido.');
+      return false;
+    } else if (!viewModel.isValidPhone(viewModel.phoneNumber)) {
+      viewModel
+          .setErrorMessage('Por favor, ingrese un número de celular válido.');
+      return false;
+    } else if (viewModel.password != viewModel.confirmPassword) {
+      viewModel.setErrorMessage('Las contraseñas no coinciden.');
+      return false;
+    }
+    viewModel.setErrorMessage('');
+    return true;
+  }
+
+  void _showConfirmationDialog(
+      BuildContext context, RegisterViewModel viewModel) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Confirmar Registro'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                ListTile(
+                  title: const Text('Nombres:'),
+                  subtitle: Text(viewModel.firstName),
+                ),
+                ListTile(
+                  title: const Text('Apellidos:'),
+                  subtitle: Text(viewModel.lastName),
+                ),
+                ListTile(
+                  title: const Text('Celular:'),
+                  subtitle: Text(viewModel.phoneNumber),
+                ),
+                ListTile(
+                  title: const Text('Correo:'),
+                  subtitle: Text(viewModel.email),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await viewModel.register();
+                if (viewModel.errorMessage.isEmpty) {
+                  showCustomSnackBar(
+                    context,
+                    'Registro exitoso. Por favor, inicia sesión.',
+                  );
+
+                  // Redirigir usando Navigator.pushReplacement
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginPage(),
+                    ),
+                  );
+                } else {
+                  showCustomSnackBar(context, viewModel.errorMessage);
+                }
+              },
+              child: const Text('Confirmar'),
+            ),
+          ],
         );
       },
     );

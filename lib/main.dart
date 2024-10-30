@@ -19,7 +19,6 @@ void main() {
         ChangeNotifierProvider(create: (_) => RegisterViewModel()),
         ChangeNotifierProvider(create: (_) => FormularioViewModel()),
         ChangeNotifierProvider(create: (_) => EstadoViewModel()),
-        BlocProvider(create: (_) => LoginBloc()),
       ],
       child: const MyApp(),
     ),
