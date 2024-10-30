@@ -87,6 +87,9 @@ class RegisterViewModel extends ChangeNotifier {
 
     await Future.delayed(const Duration(seconds: 2));
 
+    // Aquí simula un registro exitoso y guarda los datos del usuario
+    await _saveUserToPreferences(); // Guarda el usuario en preferencias
+
     _isLoading = false;
     notifyListeners();
   }

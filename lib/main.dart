@@ -1,5 +1,6 @@
 import 'package:appmuni/features/mantenimientos/presentation/viewmodels/busquedasolicitudes_viewmodel.dart';
 import 'package:appmuni/features/mantenimientos/presentation/viewmodels/formulario_viewmodel.dart';
+import 'package:appmuni/features/usuarios/presentation/pages/register_page.dart';
 import 'package:appmuni/features/usuarios/presentation/viewmodels/register_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,6 +38,8 @@ class MyApp extends StatelessWidget {
         '/': (context) => const AuthWrapper(),
         '/home': (context) => const HomePage(),
         '/login': (context) => const LoginPage(),
+        '/register': (context) =>
+            const RegisterPage(), // Añade aquí el register si es necesario
       },
     );
   }

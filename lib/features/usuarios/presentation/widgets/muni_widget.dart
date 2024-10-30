@@ -5,12 +5,15 @@ import 'package:appmuni/theme/colors.dart';
 class MunicipalInfoWidget extends StatelessWidget {
   const MunicipalInfoWidget({super.key});
 
-  // URL de la municipalidad (ejemplo)
-  final String urlMunicipalidad = 'https://www.municipalidad-peru.com';
+  // URL de la municipalidad
+  final String urlMunicipalidad = 'https://www.muniasia.gob.pe/';
 
-  void _launchURL() async {
-    if (await canLaunch(urlMunicipalidad)) {
-      await launch(urlMunicipalidad);
+  // Método para abrir la URL
+  Future<void> _launchURL() async {
+    final Uri uri = Uri.parse(urlMunicipalidad);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri,
+          mode: LaunchMode.externalApplication); // Usa `externalApplication`
     } else {
       throw 'No se pudo abrir el sitio: $urlMunicipalidad';
     }
@@ -59,7 +62,7 @@ class MunicipalInfoWidget extends StatelessWidget {
             onPressed: _launchURL,
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.white,
-              side: const BorderSide(color: AppColors.primary), // borde primary
+              side: const BorderSide(color: AppColors.primary),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
               ),

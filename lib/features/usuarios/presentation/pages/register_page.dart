@@ -88,7 +88,6 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 20),
                           _buildTextField(
                             controller: _firstNameController,
                             label: 'Nombres',
@@ -300,21 +299,13 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
             TextButton(
               onPressed: () async {
-                Navigator.of(context).pop();
-                await viewModel.register();
-                if (viewModel.errorMessage.isEmpty) {
-                  showCustomSnackBar(
-                    context,
-                    'Registro exitoso. Por favor, inicia sesión.',
-                  );
+                Navigator.of(context).pop(); // Cierra el diálogo
+                await viewModel.register(); // Llama al registro
 
-                  // Redirigir usando Navigator.pushReplacement
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LoginPage(),
-                    ),
-                  );
+                // Verifica si no hay errores
+                if (viewModel.errorMessage.isEmpty) {
+                  viewModel.clearFields();
+                  Navigator.pushNamed(context, '/login');
                 } else {
                   showCustomSnackBar(context, viewModel.errorMessage);
                 }

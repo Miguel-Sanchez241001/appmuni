@@ -156,15 +156,11 @@ class LoginPage extends StatelessWidget {
                 // Texto para registrarse
                 GestureDetector(
                   onTap: () {
-                    // Navegar a la pantalla de registro
+                    Navigator.pushNamed(context, '/register');
                   },
                   child: TextButton(
                     onPressed: () {
-                      // Aquí va la lógica para redirigir a la página de registro
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => RegisterPage()),
-                      );
+                      Navigator.pushNamed(context, '/register');
                     },
                     child: const Text(
                       'Regístrate aquí',
