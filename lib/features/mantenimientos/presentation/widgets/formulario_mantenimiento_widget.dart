@@ -18,6 +18,8 @@ class _BusquedaMantenimientoWidgetState
   final _numeroSerieCpuController = TextEditingController();
   final _numeroSerieMonitorController = TextEditingController();
   final _numeroSerieTecladoController = TextEditingController();
+  final _numeroSerieMouseController = TextEditingController();
+  final _numeroPulgadasController = TextEditingController();
 
   @override
   void dispose() {
@@ -26,6 +28,7 @@ class _BusquedaMantenimientoWidgetState
     _numeroSerieCpuController.dispose();
     _numeroSerieMonitorController.dispose();
     _numeroSerieTecladoController.dispose();
+    _numeroSerieMouseController.dispose();
     super.dispose();
   }
 
@@ -59,10 +62,53 @@ class _BusquedaMantenimientoWidgetState
                     fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 5),
-              _buildTextField(
+              _buildDropdown(
                 label: 'Nombre del Área',
-                controller: _nombreController,
-                onChanged: (value) => viewModel.setNombreBuscado(value),
+                items: [
+                  'Seleccione',
+                  'SUB GERENCIA DE PROGRAMAS SOCIALES Y SALUD',
+                  'GERENCIA DE ADMINISTRACION TRIBUTARIA',
+                  'SUB GERENCIA DE TESORERIA',
+                  'PROCURADORIA PUBLICA MUNICIPAL',
+                  'SUB GERENCIA DE REGISTRO CIVIL',
+                  'GERENCIA DE DESARROLLO E INCLUSION SOCIAL',
+                  'SUB GERENCIA DE LOGISTICA Y ABASTECIMIENTO-ALMACEN',
+                  'SUBGERENCIA DE EJECUCION COACTIVA',
+                  'SUB GERENCIA DE TESORERIA',
+                  'SUB GERENCIA DE LOGISTICA Y ABASTECIMIENTO',
+                  'GERENCIA DE ADMINISTRACION Y FINANZAS',
+                  'SUB GERENCIA DE RECURSOS HUMANOS',
+                  'GERENCIA DE PLANEAMIENTO Y PRESUPUESTO',
+                  'SUB GERENCIA DE CONTABILIDAD',
+                  'ASESORIA JURIDICA',
+                  'GERENCIA DE DESARROLLO URBANO Y RURAL',
+                  'SUB GERENCIA DE OBRAS PUBLICAS, TRANSPORTE Y SEGURIDAD VIAL',
+                  'SUB GERENCIA DE DEFENSA CIVIL',
+                  'SUB GERENCIA DE FISCALIZACION TRIBUTARIA',
+                  'GERENCIA DE ADMINISTRACION TRIBUTARIA - PLATAFORMA',
+                  'SUB GERENCIA DE TRAMITE DOCUMENTARIO',
+                  'GERENCIA MUNICIPAL',
+                  'SUB GERENCIA DE COMUNICACION Y IMAGEN',
+                  'SECRETARIA GENERAL',
+                  'GERENCIA DE SERVICIOS PUBLICOS',
+                  'SUB GERENCIA DE FOMENTO DE LA INVERSION Y PROMOCION EMPRESARIAL',
+                  'SUB GERENCIA DEL AREA TECNICA MUNICIPAL',
+                  'SUB GERENCIA DE INFORMATICA Y ESTADISTICA',
+                  'SUB GERENCIA DE DEMUNA, OMAPED Y CIAM',
+                  'SUBGERENCIA DE SEGURIDAD CIUDADANA SERENAZGO',
+                  'SUBGERENCIA DE EDUCACION, CULTURA, DEPORTE Y JUVENTUD',
+                  'SUB GERENCIA DE PARTICIPACION VECINAL',
+                  'SUB GERENCIA DE EMPADRONAMIENTO LOCAL DE SISFOH',
+                  'SUB GERENCIA DE FISCALIZACION ADMINISTRATIVAS Y POLICIA MUNICIPAL',
+                  'GERENCIA DE DESARROLLO ECONOMICO LOCAL',
+                  'SUB GERENCIA DE LIMPIEZA PUBLICA Y ORNATO',
+                  'SUB GERENCIA DE GESTION AMBIENTAL',
+                  'SUB GERENCIA DE AREAS VERDES',
+                  'SUBGERENCIA DE TURISMO',
+                  'SUB GERENCIA DE RECURSOS HUMANOS',
+                ],
+                value: viewModel.nombreBuscado,
+                onChanged: (value) => viewModel.setNombreBuscado(value!),
               ),
               _buildTextField(
                 label: 'Sede',
@@ -70,7 +116,7 @@ class _BusquedaMantenimientoWidgetState
                 onChanged: (value) => viewModel.setDepartamentoBuscado(value),
               ),
               _buildDropdown(
-                label: 'CPU (MARCA - MODELO)',
+                label: 'Marca - Modelo (CPU)',
                 items: [
                   'Seleccione',
                   'VASTEC COMMANDER G8',
@@ -117,6 +163,11 @@ class _BusquedaMantenimientoWidgetState
                 onChanged: (value) => viewModel.setMarcaMonitor(value!),
               ),
               _buildTextField(
+                label: 'Pulgadas (Monitor)',
+                controller: _numeroPulgadasController,
+                onChanged: (value) => viewModel.setPulgadasMonitor(value),
+              ),
+              _buildTextField(
                 label: 'Número de serie (Monitor)',
                 controller: _numeroSerieMonitorController,
                 onChanged: (value) => viewModel.setNumeroSerieMonitor(value),
@@ -142,10 +193,50 @@ class _BusquedaMantenimientoWidgetState
                 value: viewModel.teclado,
                 onChanged: (value) => viewModel.setMarcaTeclado(value!),
               ),
+              _buildDropdown(
+                label: 'Teclado (PUERTO)',
+                items: [
+                  'Seleccione',
+                  'USB',
+                  'PS2',
+                ],
+                value: viewModel.tecladoPuerto,
+                onChanged: (value) => viewModel.setTecladoPuerto(value!),
+              ),
               _buildTextField(
-                label: '(Modelo - Serie)',
+                label: 'Modelo - Serie (Teclado)',
                 controller: _numeroSerieTecladoController,
                 onChanged: (value) => viewModel.setNumeroSerieTeclado(value),
+              ),
+              _buildDropdown(
+                label: 'Mouse (MARCA)',
+                items: [
+                  'Seleccione',
+                  'LOGITECH',
+                  'HP',
+                  'DELL',
+                  'MICROSOFT',
+                  'GENIUS',
+                  'GENERICO',
+                  'ADVANCE',
+                ],
+                value: viewModel.mouse,
+                onChanged: (value) => viewModel.setMouse(value!),
+              ),
+              _buildDropdown(
+                label: 'Mouse (PUERTO)',
+                items: [
+                  'Seleccione',
+                  'USB',
+                  'PS2',
+                ],
+                value: viewModel.mousePuerto,
+                onChanged: (value) => viewModel.setMousePuerto(value!),
+              ),
+              _buildTextField(
+                label: 'Modelo - Serie (Mouse)',
+                controller: _numeroSerieMouseController,
+                onChanged: (value) => viewModel.setNumeroSerieMouse(value),
               ),
               _buildDropdown(
                 label: 'Prioridad',

@@ -15,15 +15,20 @@ class SolicitudMantenimiento {
 }
 
 class BusquedaMantenimientoViewModel extends ChangeNotifier {
-  String _nombreBuscado = '';
+  String _nombreBuscado = 'Seleccione';
   String _departamentoBuscado = '';
   String _marca = 'Seleccione';
   String _monitor = 'Seleccione';
   String _teclado = 'Seleccione';
+  String _mouse = 'Seleccione';
+  String _mousePuerto = 'Seleccione';
+  String _tecladoPuerto = 'Seleccione';
   String _prioridadBuscada = 'Seleccione';
   String _numSerie = '';
   String _numSerieMonitor = '';
   String _numSerieTeclado = '';
+  String _numSerieMouse = '';
+  String _pulgadas = '';
   List<SolicitudMantenimiento> _resultadosBusqueda = [];
   List<SolicitudMantenimiento> _solicitudes = [];
 
@@ -33,10 +38,16 @@ class BusquedaMantenimientoViewModel extends ChangeNotifier {
   String get marca => _marca;
   String get monitor => _monitor;
   String get teclado => _teclado;
+  String get mouse => _mouse;
+  String get mousePuerto => _mousePuerto;
+  String get tecladoPuerto => _tecladoPuerto;
   String get numSerie => _numSerie;
+  String get pulgadas => _pulgadas;
   String get numSerieMonitor => _numSerieMonitor;
   String get numSerieTeclado => _numSerieTeclado;
+  String get numSerieMouse => _numSerieMouse;
 
+  String get nombreBuscado => _nombreBuscado;
   // Métodos para actualizar los valores de los campos
   void setNombreBuscado(String nombre) {
     _nombreBuscado = nombre;
@@ -63,6 +74,11 @@ class BusquedaMantenimientoViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setNumeroSerieMouse(String numSerie) {
+    _numSerieMouse = numSerie;
+    notifyListeners();
+  }
+
   void setPrioridadBuscada(String prioridad) {
     _prioridadBuscada = prioridad;
     notifyListeners();
@@ -78,8 +94,28 @@ class BusquedaMantenimientoViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setPulgadasMonitor(String value) {
+    _pulgadas = value;
+    notifyListeners();
+  }
+
   void setMarcaMonitor(String monitor) {
     _monitor = monitor;
+    notifyListeners();
+  }
+
+  void setMouse(String mouse) {
+    _mouse = mouse;
+    notifyListeners();
+  }
+
+  void setMousePuerto(String mouse) {
+    _mousePuerto = mouse;
+    notifyListeners();
+  }
+
+  void setTecladoPuerto(String puerto) {
+    _tecladoPuerto = puerto;
     notifyListeners();
   }
 
@@ -98,7 +134,7 @@ class BusquedaMantenimientoViewModel extends ChangeNotifier {
 
   // Método opcional para resetear el formulario después del registro
   void resetBusqueda() {
-    _nombreBuscado = '';
+    _nombreBuscado = 'Seleccione';
     _departamentoBuscado = '';
     _marca = 'Seleccione';
     _monitor = 'Seleccione';
